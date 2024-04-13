@@ -30,12 +30,13 @@ namespace Route.Talabat.Infrastructure.Config
 
             //RelationShips
             builder.HasOne(P => P.Brand)
-                .WithMany()
+                .WithMany(P => P.Products)
                 .HasForeignKey(P => P.BrandId);
             //.OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(P => P.Category)
-                .WithMany().HasForeignKey(P => P.CategoryId);
+                .WithMany()
+                .HasForeignKey(P => P.CategoryId);
                  //.OnDelete(DeleteBehavior.SetNull);
 
             //DeleteBy Default is Cascade

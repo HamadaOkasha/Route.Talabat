@@ -43,10 +43,8 @@ namespace Route.Talabat.APIs
             try
             {
                 await _dbContext.Database.MigrateAsync(); //update-database
-        
-                // go to project file and invers make it true 
-                //start seading
-                //await
+                await ApplicationDbContextSeed.SeedAsync(_dbContext);//Data Seeding
+               
             }
             catch (Exception ex)
             {

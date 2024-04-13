@@ -17,7 +17,7 @@ namespace Route.Talabat.Core.Entities.Product
         // [ForeignKey(nameof(Product.Brand))]
         // public int ProductBrandId { get; set; }//FK for ProductBrand Entity
 
-       // [ForeignKey(nameof(Product.Brand))]  //-> write it wiht fluent api better
+        // [ForeignKey(nameof(Product.Brand))]  //-> write it wiht fluent api better
         public int BrandId { get; set; }//FK for ProductBrand Entity
         
         //[InverseProperty(nameof(ProductBrand.Products))]// if more than one relationship

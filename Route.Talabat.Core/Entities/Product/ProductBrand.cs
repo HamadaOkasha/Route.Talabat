@@ -10,6 +10,6 @@ namespace Route.Talabat.Core.Entities.Product
     {
         public string Name { get; set; }
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
-        //one-2-one if not write
+        //one-2-one if not write or not write in configuration
     }
 }
