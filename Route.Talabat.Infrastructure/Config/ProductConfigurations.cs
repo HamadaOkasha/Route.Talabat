@@ -30,7 +30,7 @@ namespace Route.Talabat.Infrastructure.Config
 
             //RelationShips
             builder.HasOne(P => P.Brand)
-                .WithMany(P => P.Products)
+                .WithMany()//P => P.Products
                 .HasForeignKey(P => P.BrandId);
             //.OnDelete(DeleteBehavior.SetNull);
 

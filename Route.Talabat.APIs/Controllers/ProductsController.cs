@@ -28,5 +28,20 @@ namespace Route.Talabat.APIs.Controllers
 
             return Ok(products);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProduct(int? id)
+        {
+            if (!id.HasValue)
+                return BadRequest();//400
+
+            var product = await _productsRepo.GetAsync(id.Value);
+
+            if (product is null)
+                return NotFound(new {Message="Not Found" ,StatusCode= 404});//404
+               // return NotFound();//404
+
+            return Ok(product);//200
+        }
     }
 }
