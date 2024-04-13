@@ -1,10 +1,13 @@
 
+using Microsoft.EntityFrameworkCore;
+using Route.Talabat.Infrastructure.Data;
+
 namespace Route.Talabat.APIs
 {
     public class Program
     {
         //Entery Point
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
           
@@ -19,9 +22,41 @@ namespace Route.Talabat.APIs
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>{
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             #endregion
 
             var app = builder.Build();
+
+
+            //used using to close it after finishing and can use try finally
+            using var scoped = app.Services.CreateScope();    //create scoped lifetime
+            var services = scoped.ServiceProvider;      //has services with scoped lifetime
+            var _dbContext = services.GetRequiredService<ApplicationDbContext>();   //ask CLR to Create object from DbContext Explicitly
+        
+
+            //may be a problem when update-database and want to view or log error
+            var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        
+            try
+            {
+                await _dbContext.Database.MigrateAsync(); //update-database
+        
+                // go to project file and invers make it true 
+                //start seading
+                //await
+            }
+            catch (Exception ex)
+            {
+                //  Console.WriteLine(ex.Message);
+                var logger = loggerFactory.CreateLogger<Program>();
+                logger.LogError(ex.Message, "An error has been Occured during applaymigrations");
+               // logger.LogError(ex.StackTrace.ToString());//more details
+            }
+        
+
 
             //define middleware for the app
             #region Configure Kestrel Middlewares
