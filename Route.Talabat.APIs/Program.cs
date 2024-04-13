@@ -1,5 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
+using Route.Talabat.Core.Entities.Product;
+using Route.Talabat.Core.IRepositories;
+using Route.Talabat.Infrastructure;
 using Route.Talabat.Infrastructure.Data;
 
 namespace Route.Talabat.APIs
@@ -25,6 +28,12 @@ namespace Route.Talabat.APIs
             builder.Services.AddDbContext<ApplicationDbContext>(options =>{
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            // builder.Services.AddScoped<IGenericRepository<Product>, GenericRepository<Product>>();
+            // builder.Services.AddScoped<IGenericRepository<ProductBrand>, GenericRepository<ProductBrand>>();
+            // builder.Services.AddScoped<IGenericRepository<ProductCategory>, GenericRepository<ProductCategory>>();
+
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             #endregion
 

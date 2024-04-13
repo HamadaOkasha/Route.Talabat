@@ -20,7 +20,7 @@ namespace Route.Talabat.Infrastructure
         }
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public async Task<T?> GetAsync(int id)
