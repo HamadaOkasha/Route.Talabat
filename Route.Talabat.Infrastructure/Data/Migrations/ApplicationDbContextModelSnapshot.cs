@@ -57,7 +57,7 @@ namespace Route.Talabat.Infrastructure.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Route.Talabat.Core.Entities.Product.ProductBrand", b =>
@@ -74,7 +74,7 @@ namespace Route.Talabat.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductBrands");
+                    b.ToTable("ProductBrands", (string)null);
                 });
 
             modelBuilder.Entity("Route.Talabat.Core.Entities.Product.ProductCategory", b =>
@@ -91,13 +91,13 @@ namespace Route.Talabat.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Route.Talabat.Core.Entities.Product.Product", b =>
                 {
                     b.HasOne("Route.Talabat.Core.Entities.Product.ProductBrand", "Brand")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -111,6 +111,11 @@ namespace Route.Talabat.Infrastructure.Data.Migrations
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Route.Talabat.Core.Entities.Product.ProductBrand", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
