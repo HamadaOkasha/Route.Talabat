@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Route.Talabat.APIs.Errors;
 using Route.Talabat.APIs.Helper;
+using Route.Talabat.APIs.Middlewares;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Infrastructure;
@@ -87,16 +88,22 @@ namespace Route.Talabat.APIs
                 logger.LogError(ex.Message, "An error has been Occured during applaymigrations");
                // logger.LogError(ex.StackTrace.ToString());//more details
             }
-        
+
 
 
             //define middleware for the app
             #region Configure Kestrel Middlewares
             // Configure the HTTP request pipeline.
+          
+            app.UseMiddleware<ExceptionMiddleware>();
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+               //500
+               //app.UseDeveloperExceptionPage();//call internaly from .net
             }
 
             app.UseHttpsRedirection(); //if request came as http will redirect to https
