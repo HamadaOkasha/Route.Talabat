@@ -41,7 +41,9 @@ namespace Route.Talabat.APIs.Controllers
             if (!id.HasValue)
                 return BadRequest();//400
 
-            var product = await _productsRepo.GetAsync(id.Value);
+            //var product = await _productsRepo.GetAsync(id.Value);
+            var spec = new ProductWithBrandAndCategorySpecifications(id.Value);
+            var product = await _productsRepo.GetWithSpecAsync(spec);
 
             if (product is null)
                 return NotFound(new {Message="Not Found" ,StatusCode= 404});//404

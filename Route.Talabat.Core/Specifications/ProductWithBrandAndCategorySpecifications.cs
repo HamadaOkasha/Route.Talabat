@@ -7,31 +7,31 @@ using System.Threading.Tasks;
 
 namespace Route.Talabat.Core.Specifications
 {
-    public class ProductWithBrandAndCategorySpecifications :BaseSpecification<Product>
+    public class ProductWithBrandAndCategorySpecifications : BaseSpecification<Product>
     {
         //this ctor will be used for creating an object , that will be for build the query that will get all Products
         public ProductWithBrandAndCategorySpecifications()
-            :base()
+            : base()
         {
-            // AddIncludes();
-            Includes.Add(p => p.Brand);
-            Includes.Add(p => p.Category);
+              AddIncludes();
+           //Includes.Add(p => p.Brand);
+           //Includes.Add(p => p.Category);
         }
 
 
         //this ctor will be used for creating an object , that will be for build the query that will get sprcific Products
         public ProductWithBrandAndCategorySpecifications(int id)
-         : base(P=>P.Id==id) //second ctor
+         : base(P => P.Id == id) //second ctor
         {
-            // AddIncludes();
-            Includes.Add(p => p.Brand);
-            Includes.Add(p => p.Category);
+             AddIncludes();
+           // Includes.Add(p => p.Brand);
+           // Includes.Add(p => p.Category);
         }
 
-        //private void AddIncludes()
-        //{
-        //    Includes.Add(p => p.Brand);
-        //    Includes.Add(p => p.Category);
-        //}
+         private void AddIncludes()
+         {
+             Includes.Add(p => p.Brand);
+             Includes.Add(p => p.Category);
+         }
     }
 }
