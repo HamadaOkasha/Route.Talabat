@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Route.Talabat.APIs.DTOs;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Core.Specifications;
@@ -9,14 +11,16 @@ namespace Route.Talabat.APIs.Controllers
     public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productsRepo;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IGenericRepository<Product> productsRepo)
+        public ProductsController(IGenericRepository<Product> productsRepo,IMapper mapper)
         {
             _productsRepo = productsRepo;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetProducts()
         {
             //  var products = await _productsRepo.GetAllAsync();
 
@@ -32,11 +36,13 @@ namespace Route.Talabat.APIs.Controllers
             // OkObjectResult result = new OkObjectResult(products);
             // return result;
 
-            return Ok(products);
+            //  return Ok(products);
+            return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable<ProductToReturnDto>>(products));//200
+
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int? id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int? id)
         {
             if (!id.HasValue)
                 return BadRequest();//400
@@ -49,7 +55,8 @@ namespace Route.Talabat.APIs.Controllers
                 return NotFound(new {Message="Not Found" ,StatusCode= 404});//404
                // return NotFound();//404
 
-            return Ok(product);//200
+           // return Ok(product);//200
+            return Ok(_mapper.Map<Product,ProductToReturnDto>(product));//200
         }
     }
 }

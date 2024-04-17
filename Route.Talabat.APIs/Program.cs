@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Route.Talabat.APIs.Helper;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Infrastructure;
@@ -35,6 +36,8 @@ namespace Route.Talabat.APIs
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+           // builder.Services.AddAutoMapper(p => p.AddProfile(new MappingProfiles()));
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
             #endregion
 
             var app = builder.Build();
