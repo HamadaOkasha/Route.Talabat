@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
+using Route.Talabat.Core.Specifications;
 
 namespace Route.Talabat.APIs.Controllers
 {
@@ -17,12 +18,17 @@ namespace Route.Talabat.APIs.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            var products = await _productsRepo.GetAllAsync();
+            //  var products = await _productsRepo.GetAllAsync();
+
+           // var spec = new BaseSpecification<Product>();
+           
+            var spec = new ProductWithBrandAndCategorySpecifications();
+            var products = await _productsRepo.GetAllWithSpecAsync(spec);
 
             // JsonResult result = new JsonResult(products);
             // result.StatusCode=200;
             // return result;
-            
+
             // OkObjectResult result = new OkObjectResult(products);
             // return result;
 
