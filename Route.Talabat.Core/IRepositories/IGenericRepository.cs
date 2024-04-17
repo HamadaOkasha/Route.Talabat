@@ -1,4 +1,5 @@
 ﻿using Route.Talabat.Core.Entities;
+using Route.Talabat.Core.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Route.Talabat.Core.IRepositories
     {
         Task<T?> GetAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
-
+       
+        Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T> spec);
+        Task<T?> GetWithSpecAsync(ISpecification<T> spec);
     }
 }
