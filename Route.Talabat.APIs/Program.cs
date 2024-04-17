@@ -38,6 +38,8 @@ namespace Route.Talabat.APIs
 
            // builder.Services.AddAutoMapper(p => p.AddProfile(new MappingProfiles()));
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+
             #endregion
 
             var app = builder.Build();
@@ -78,6 +80,8 @@ namespace Route.Talabat.APIs
             }
 
             app.UseHttpsRedirection(); //if request came as http will redirect to https
+
+            app.UseStaticFiles();
 
             //app.UseAuthorization(); //not need now!
 
