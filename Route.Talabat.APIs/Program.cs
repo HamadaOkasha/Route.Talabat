@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Route.Talabat.APIs.Errors;
+using Route.Talabat.APIs.Extensions;
 using Route.Talabat.APIs.Helper;
 using Route.Talabat.APIs.Middlewares;
 using Route.Talabat.Core.Entities.Product;
@@ -25,48 +26,21 @@ namespace Route.Talabat.APIs
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-           
-            //to swagger
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            
+            builder.Services.AddSwaggerServices();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>{
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            
 
-            // builder.Services.AddScoped<IGenericRepository<Product>, GenericRepository<Product>>();
-            // builder.Services.AddScoped<IGenericRepository<ProductBrand>, GenericRepository<ProductBrand>>();
-            // builder.Services.AddScoped<IGenericRepository<ProductCategory>, GenericRepository<ProductCategory>>();
-
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-           // builder.Services.AddAutoMapper(p => p.AddProfile(new MappingProfiles()));
-            builder.Services.AddAutoMapper(typeof(MappingProfiles));
-
-
-            //vaildation errors
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = (actionContext) =>
-                {
-                    var errors = actionContext.ModelState.Where(p => p.Value.Errors.Count() > 0)
-                                        .SelectMany(p => p.Value.Errors)
-                                        .Select(e => e.ErrorMessage)
-                                        .ToList();
-                    var response = new ApiValidationErrorResponse()
-                    {
-                        Errors = errors,
-                    };
-                    //cant use badRequest();
-                    return new BadRequestObjectResult(response);
-                };
-            });
+            //ApplicationServicesExtension.ApplicationServices(builder.Services);
+            builder.Services.ApplicationServices();
+            
 
             #endregion
 
             var app = builder.Build();
-
 
             //used using to close it after finishing and can use try finally
             using var scoped = app.Services.CreateScope();    //create scoped lifetime
@@ -137,8 +111,7 @@ namespace Route.Talabat.APIs
 
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddlewares();
 
                //500
                //app.UseDeveloperExceptionPage();//call internaly from .net
