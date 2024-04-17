@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Route.Talabat.APIs.Errors;
 using Route.Talabat.Infrastructure.Data;
 
 namespace Route.Talabat.APIs.Controllers
@@ -20,7 +21,9 @@ namespace Route.Talabat.APIs.Controllers
         {
             var product = _dbContext.Products.Find(100);
             if (product is null) 
-                return NotFound();
+                //return NotFound();
+                //return NotFound(new { StatusCode=404,Message="Not Found"});
+                return NotFound(new ApiResponse(404));
             return Ok(product);
         }
         //500
@@ -38,7 +41,8 @@ namespace Route.Talabat.APIs.Controllers
         [HttpGet("badrequest")]//api/buggy/badrequest
         public ActionResult GetBadRequest()
         {
-          return BadRequest(); 
+          //return BadRequest();
+          return BadRequest(new ApiResponse(400));
         }
         //400 with errors of type dictionary
         //when debug will not go to here he want an int not string  
@@ -51,7 +55,7 @@ namespace Route.Talabat.APIs.Controllers
         [HttpGet("unauthorized")]//api/buggy/unauthorized
         public ActionResult GetUnAuthorizedError()
         {
-            return Unauthorized();
+            return Unauthorized(new ApiResponse(401));
         }
         //and not found by no api
     }
