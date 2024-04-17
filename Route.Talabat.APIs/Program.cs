@@ -144,6 +144,15 @@ namespace Route.Talabat.APIs
                //app.UseDeveloperExceptionPage();//call internaly from .net
             }
 
+
+            //  //no api with this name
+            //  app.UseStatusCodePagesWithRedirects("/errors/{0}");
+            //  //two request -> 302 redirect then 404 not found
+
+            //use this better than above -> one request 404 not found 
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            
+
             app.UseHttpsRedirection(); //if request came as http will redirect to https
 
             app.UseStaticFiles();
