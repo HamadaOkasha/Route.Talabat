@@ -19,6 +19,7 @@ namespace Route.Talabat.Core.Specifications
 		}
         
 		private int pageIndex = 1;
+
         public int PageIndex { 
 			get { return pageIndex; }
 			set { pageIndex = value < pageIndex ? pageIndex : value; } 
@@ -27,5 +28,11 @@ namespace Route.Talabat.Core.Specifications
 		public int? BrandId { get; set; }
 		public int? CategoryId { get; set; }
 
+        private string? search;
+        public string? Search
+		{
+			get { return search; } 
+			set { search = value?.ToLower(); }
+		}
     }
 }

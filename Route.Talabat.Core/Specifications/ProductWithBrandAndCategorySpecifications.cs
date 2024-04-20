@@ -12,6 +12,7 @@ namespace Route.Talabat.Core.Specifications
         //this ctor will be used for creating an object , that will be for build the query that will get all Products
         public ProductWithBrandAndCategorySpecifications(ProductSpecParams specParams)
             : base(P =>
+                    (string.IsNullOrEmpty(specParams.Search) ||P.Name.ToLower().Contains(specParams.Search)) &&
                     (!specParams.BrandId.HasValue || P.BrandId == specParams.BrandId.Value) &&
                     (!specParams.CategoryId.HasValue || P.CategoryId == specParams.CategoryId.Value)
                  )
