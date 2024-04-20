@@ -11,13 +11,18 @@ namespace Route.Talabat.Core.Specifications
 		private const int MaxPageSize=10;
 	
 		private int pageSize=5;  //intalized of not send
-		public int PageSize
+        public int PageSize
         {
 			get { return pageSize; }
-			set { pageSize= value > MaxPageSize ? MaxPageSize:value; }
+			set { pageSize= (value > MaxPageSize || value<=0)  ? MaxPageSize : value; }
 			//to prevent frontEnd from send 1000!
 		}
-		public int PageIndex { get; set; } = 1;  //intalized of not send
+        
+		private int pageIndex = 1;
+        public int PageIndex { 
+			get { return pageIndex; }
+			set { pageIndex = value < pageIndex ? pageIndex : value; } 
+		}
         public string? Sort { get; set; } 
 		public int? BrandId { get; set; }
 		public int? CategoryId { get; set; }

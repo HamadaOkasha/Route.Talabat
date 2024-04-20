@@ -49,5 +49,10 @@ namespace Route.Talabat.Infrastructure
         {
             return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
+
+        public async Task<int> GetCountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
     }
 }

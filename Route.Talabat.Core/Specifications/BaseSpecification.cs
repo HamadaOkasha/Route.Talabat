@@ -18,7 +18,8 @@ namespace Route.Talabat.Core.Specifications
         public Expression<Func<T, object>> OrderByDesc { get; set; } = null;
         public int Skip { get; set; }
         public int Take { get; set; }
-        public bool IsPaginationEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsPaginationEnabled { get ; set ; }
+
 
         public BaseSpecification()
         {
@@ -31,6 +32,8 @@ namespace Route.Talabat.Core.Specifications
             Criteria = criteriaExpression;
            // Includes = new List<Expression<Func<T, object>>>();
         }
+
+
         public void AddOrderBy(Expression<Func<T, object>> orderByExpression)
         {
             OrderBy = orderByExpression;

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Route.Talabat.APIs.DTOs;
 using Route.Talabat.APIs.Errors;
+using Route.Talabat.APIs.Helper;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Core.Specifications;
@@ -29,12 +30,13 @@ namespace Route.Talabat.APIs.Controllers
 
         [HttpGet]
         //Or [HttpPost] without [FromQuery]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams specParams)
+        public async Task<ActionResult<IReadOnlyList<Pagination<ProductToReturnDto>>>> GetProducts([FromQuery]ProductSpecParams specParams)
         {
             //  var products = await _productsRepo.GetAllAsync();
 
            // var spec = new BaseSpecification<Product>();
            
+            //Specification for Data
             var spec = new ProductWithBrandAndCategorySpecifications(specParams);
             var products = await _productsRepo.GetAllWithSpecAsync(spec);
 
@@ -46,7 +48,14 @@ namespace Route.Talabat.APIs.Controllers
             // return result;
 
             //  return Ok(products);
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));//200
+            // return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));//200
+
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+
+            var CountSpec = new ProductsWithFilterationForCountSpecifications(specParams);
+            var count = await _productsRepo.GetCountAsync(CountSpec/*spec*/);
+          
+            return Ok(new Pagination<ProductToReturnDto>(specParams.PageIndex,specParams.PageSize, count, data));//200
 
         }
        // [ProducesResponseType(typeof(ProductToReturnDto),200)]
