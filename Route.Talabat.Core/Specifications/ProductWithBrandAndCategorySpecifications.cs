@@ -10,12 +10,37 @@ namespace Route.Talabat.Core.Specifications
     public class ProductWithBrandAndCategorySpecifications : BaseSpecification<Product>
     {
         //this ctor will be used for creating an object , that will be for build the query that will get all Products
-        public ProductWithBrandAndCategorySpecifications()
+        public ProductWithBrandAndCategorySpecifications(string sort)
             : base()
         {
-              AddIncludes();
-           //Includes.Add(p => p.Brand);
-           //Includes.Add(p => p.Category);
+            AddIncludes();
+            //Includes.Add(p => p.Brand);
+            //Includes.Add(p => p.Category);
+          
+            //Sort
+            if (!string.IsNullOrEmpty(sort))
+            {
+
+                switch (sort)
+                {
+                    case "priceAsc":
+                        //OrderBy = p => p.Price;
+                        AddOrderBy(p => p.Price);
+                        break;
+                    case "priceDesc":
+                        AddOrderByDesc(p => p.Price);
+                        break;
+                    default:
+                        AddOrderBy(p => p.Name);
+                        break;
+                }
+
+            }
+            else
+                AddOrderBy(p => p.Name);
+
+
+
         }
 
 
@@ -23,15 +48,15 @@ namespace Route.Talabat.Core.Specifications
         public ProductWithBrandAndCategorySpecifications(int id)
          : base(P => P.Id == id) //second ctor
         {
-             AddIncludes();
-           // Includes.Add(p => p.Brand);
-           // Includes.Add(p => p.Category);
+            AddIncludes();
+            // Includes.Add(p => p.Brand);
+            // Includes.Add(p => p.Category);
         }
 
-         private void AddIncludes()
-         {
-             Includes.Add(p => p.Brand);
-             Includes.Add(p => p.Category);
-         }
+        private void AddIncludes()
+        {
+            Includes.Add(p => p.Brand);
+            Includes.Add(p => p.Category);
+        }
     }
 }

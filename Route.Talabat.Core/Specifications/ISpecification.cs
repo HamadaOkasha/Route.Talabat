@@ -13,6 +13,10 @@ namespace Route.Talabat.Core.Specifications
         
         public Expression<Func<T,bool>>? Criteria { get; set; } //Where --> p=>p.id = 1
         public List<Expression<Func<T, object>>> Includes { get; set; }  //Include
-          //object instead of BaseEntity because may return orderitems -> list of items not one
+        //object instead of BaseEntity because may return orderitems -> list of items not one
+
+
+        public Expression<Func<T, object>> OrderBy { get; set; } //OrderBy(p=>p.Name)
+        public Expression<Func<T, object>> OrderByDesc { get; set; } //OrderByDesc(p=>p.Name)
     }
 }

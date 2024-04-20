@@ -14,7 +14,8 @@ namespace Route.Talabat.Core.Specifications
 
        // public List<Expression<Func<T, object>>> Includes { get; set; } = null!;
         public List<Expression<Func<T, object>>> Includes { get; set; } = new List<Expression<Func<T, object>>>();
-
+        public Expression<Func<T, object>> OrderBy { get; set; } = null;
+        public Expression<Func<T, object>> OrderByDesc { get; set; } = null;
         public BaseSpecification()
         {
             Criteria = null;
@@ -25,6 +26,14 @@ namespace Route.Talabat.Core.Specifications
         {
             Criteria = criteriaExpression;
            // Includes = new List<Expression<Func<T, object>>>();
+        }
+        public void AddOrderBy(Expression<Func<T, object>> orderByExpression)
+        {
+            OrderBy = orderByExpression;
+        }
+        public void AddOrderByDesc(Expression<Func<T, object>> orderByDescExpression)
+        {
+            OrderByDesc = orderByDescExpression;
         }
     }
 }
