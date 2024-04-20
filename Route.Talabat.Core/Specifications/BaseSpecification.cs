@@ -16,6 +16,7 @@ namespace Route.Talabat.Core.Specifications
         public List<Expression<Func<T, object>>> Includes { get; set; } = new List<Expression<Func<T, object>>>();
         public Expression<Func<T, object>> OrderBy { get; set; } = null;
         public Expression<Func<T, object>> OrderByDesc { get; set; } = null;
+
         public BaseSpecification()
         {
             Criteria = null;

@@ -10,8 +10,11 @@ namespace Route.Talabat.Core.Specifications
     public class ProductWithBrandAndCategorySpecifications : BaseSpecification<Product>
     {
         //this ctor will be used for creating an object , that will be for build the query that will get all Products
-        public ProductWithBrandAndCategorySpecifications(string sort)
-            : base()
+        public ProductWithBrandAndCategorySpecifications(string sort, int? brandId, int? categoryId)
+            : base(P =>
+                    (!brandId.HasValue || P.BrandId == brandId.Value) &&
+                    (!categoryId.HasValue || P.CategoryId == categoryId.Value)
+                 )
         {
             AddIncludes();
             //Includes.Add(p => p.Brand);

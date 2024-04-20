@@ -19,7 +19,7 @@ namespace Route.Talabat.Infrastructure
 
 
             //Where
-            if (spec.Criteria is not null) // P => P.Id == id
+            if (spec.Criteria is not null) // P => P.Id == id , && P=>P.BrandId=10 && P=>P.CategoryId=10
                 query = query.Where(spec.Criteria);
             
             ///where
