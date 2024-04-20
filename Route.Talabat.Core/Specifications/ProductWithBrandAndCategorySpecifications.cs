@@ -10,10 +10,10 @@ namespace Route.Talabat.Core.Specifications
     public class ProductWithBrandAndCategorySpecifications : BaseSpecification<Product>
     {
         //this ctor will be used for creating an object , that will be for build the query that will get all Products
-        public ProductWithBrandAndCategorySpecifications(string sort, int? brandId, int? categoryId)
+        public ProductWithBrandAndCategorySpecifications(ProductSpecParams specParams)
             : base(P =>
-                    (!brandId.HasValue || P.BrandId == brandId.Value) &&
-                    (!categoryId.HasValue || P.CategoryId == categoryId.Value)
+                    (!specParams.BrandId.HasValue || P.BrandId == specParams.BrandId.Value) &&
+                    (!specParams.CategoryId.HasValue || P.CategoryId == specParams.CategoryId.Value)
                  )
         {
             AddIncludes();
@@ -21,10 +21,10 @@ namespace Route.Talabat.Core.Specifications
             //Includes.Add(p => p.Category);
           
             //Sort
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(specParams.Sort))
             {
 
-                switch (sort)
+                switch (specParams.Sort)
                 {
                     case "priceAsc":
                         //OrderBy = p => p.Price;
@@ -42,8 +42,16 @@ namespace Route.Talabat.Core.Specifications
             else
                 AddOrderBy(p => p.Name);
 
+            //Paginatiom
+            //TotalProducts= 18 ~ 20
+            //PageSize      = 5
+            //PageIndex     = 3
 
+            //Skip 10 , take 5
+            ApplayPagination((specParams.PageIndex - 1) * specParams.PageSize,specParams.PageSize);//Skip , Take
 
+            ///SQL -> Where then OrderBy then Top
+            ///--- -> Filter then Sort then Pagination
         }
 
 

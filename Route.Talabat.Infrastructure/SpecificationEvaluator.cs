@@ -40,6 +40,8 @@ namespace Route.Talabat.Infrastructure
             ///Sort
             ///query = _dbContext.Set<Product>().OrderBy(p=>p.Nmae);
             
+            if(spec.IsPaginationEnabled) // if IsPaginationEnabled not found -> skip = 0 and take = 0 by default
+                query =query.Skip(spec.Skip).Take(spec.Take);
 
             query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
 
