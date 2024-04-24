@@ -9,6 +9,7 @@ using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Infrastructure;
 using Route.Talabat.Infrastructure.Data;
+using StackExchange.Redis;
 using System.Net;
 using System.Text.Json;
 
@@ -32,7 +33,13 @@ namespace Route.Talabat.APIs
             builder.Services.AddDbContext<ApplicationDbContext>(options =>{
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>((ServiceProvider) =>
+                {
+                    var connection = builder.Configuration.GetConnectionString("Redis");
+                    return ConnectionMultiplexer.Connect(connection);
+
+                });
 
             //ApplicationServicesExtension.ApplicationServices(builder.Services);
             builder.Services.ApplicationServices();

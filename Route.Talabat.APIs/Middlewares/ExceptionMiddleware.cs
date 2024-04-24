@@ -57,7 +57,7 @@ namespace Route.Talabat.APIs.Middlewares
         }
     }
 
-    ////factory Base [implement IMiddleware]
+    ////2-factory Base [implement IMiddleware]
     //public class ExceptionMiddleware : IMiddleware
     //{
     //    private readonly ILogger<ExceptionMiddleware> _logger;
