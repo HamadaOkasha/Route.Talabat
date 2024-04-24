@@ -34,6 +34,7 @@ namespace Route.Talabat.APIs
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //basket
             builder.Services.AddSingleton<IConnectionMultiplexer>((ServiceProvider) =>
                 {
                     var connection = builder.Configuration.GetConnectionString("Redis");

@@ -10,6 +10,9 @@ namespace Route.Talabat.APIs.Extensions
     {
         public static IServiceCollection ApplicationServices(this IServiceCollection services)
         {
+            //Basket Repository
+             services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
+            // services.AddScoped<IBasketRepository, BasketRepository>();
 
             // services.AddScoped<IGenericRepository<Product>, GenericRepository<Product>>();
             // services.AddScoped<IGenericRepository<ProductBrand>, GenericRepository<ProductBrand>>();
