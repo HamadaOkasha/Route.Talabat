@@ -9,6 +9,7 @@ using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Infrastructure;
 using Route.Talabat.Infrastructure.Data;
+using Route.Talabat.Infrastructure.Identity;
 using StackExchange.Redis;
 using System.Net;
 using System.Text.Json;
@@ -33,6 +34,10 @@ namespace Route.Talabat.APIs
             builder.Services.AddDbContext<ApplicationDbContext>(options =>{
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+           
+            builder.Services.AddDbContext<ApplicationIdentityDbContext>(options=>{
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
 
             //basket
             builder.Services.AddSingleton<IConnectionMultiplexer>((ServiceProvider) =>
@@ -54,7 +59,8 @@ namespace Route.Talabat.APIs
             using var scoped = app.Services.CreateScope();    //create scoped lifetime
             var services = scoped.ServiceProvider;      //has services with scoped lifetime
             var _dbContext = services.GetRequiredService<ApplicationDbContext>();   //ask CLR to Create object from DbContext Explicitly
-        
+            var _identityDbContext = services.GetRequiredService<ApplicationIdentityDbContext>();   //ask CLR to Create object from IdentityDbContext Explicitly
+
 
             //may be a problem when update-database and want to view or log error
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
@@ -65,6 +71,7 @@ namespace Route.Talabat.APIs
                 await _dbContext.Database.MigrateAsync(); //update-database
                 await ApplicationDbContextSeed.SeedAsync(_dbContext);//Data Seeding
                
+                await _identityDbContext.Database.MigrateAsync(); //update-database
             }
             catch (Exception ex)
             {

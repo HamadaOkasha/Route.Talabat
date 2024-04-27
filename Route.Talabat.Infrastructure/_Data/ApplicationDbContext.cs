@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Route.Talabat.Core.Entities.Product;
-using Route.Talabat.Infrastructure.Config;
+using Route.Talabat.Infrastructure.Data.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;

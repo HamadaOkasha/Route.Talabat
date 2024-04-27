@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Route.Talabat.Infrastructure.Config
+namespace Route.Talabat.Infrastructure.Data.Config
 {
     public class ProductConfigurations : IEntityTypeConfiguration<Product>
     {
@@ -37,7 +37,7 @@ namespace Route.Talabat.Infrastructure.Config
             builder.HasOne(P => P.Category)
                 .WithMany()
                 .HasForeignKey(P => P.CategoryId);
-                 //.OnDelete(DeleteBehavior.SetNull);
+            //.OnDelete(DeleteBehavior.SetNull);
 
             //DeleteBy Default is Cascade
         }
