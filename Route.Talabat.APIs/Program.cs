@@ -1,10 +1,12 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Route.Talabat.APIs.Errors;
 using Route.Talabat.APIs.Extensions;
 using Route.Talabat.APIs.Helper;
 using Route.Talabat.APIs.Middlewares;
+using Route.Talabat.Core.Entities.Identity;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Infrastructure;
@@ -50,6 +52,16 @@ namespace Route.Talabat.APIs
             //ApplicationServicesExtension.ApplicationServices(builder.Services);
             builder.Services.ApplicationServices();
             
+            
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+               // options.Password.RequiredUniqueChars = 2;
+               // options.Password.RequireDigit=true;
+               // options.Password.RequireLowercase=true;
+               // options.Password.RequireUppercase=true;
+
+            }).AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+            
 
             #endregion
 
@@ -72,6 +84,9 @@ namespace Route.Talabat.APIs
                 await ApplicationDbContextSeed.SeedAsync(_dbContext);//Data Seeding
                
                 await _identityDbContext.Database.MigrateAsync(); //update-database
+
+                var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                await ApplicationIdentityDataSeeding.SeedUserAsync(_userManager);
             }
             catch (Exception ex)
             {
