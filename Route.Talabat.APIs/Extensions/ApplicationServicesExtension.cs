@@ -24,6 +24,8 @@ namespace Route.Talabat.APIs.Extensions
             services.AddAutoMapper(typeof(MappingProfiles));
 
 
+            //instead -> modelstate.isvalid at every api
+
             //vaildation errors
             services.Configure<ApiBehaviorOptions>(options =>
             {
