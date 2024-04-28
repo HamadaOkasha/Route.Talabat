@@ -6,9 +6,11 @@ using Route.Talabat.APIs.Errors;
 using Route.Talabat.APIs.Extensions;
 using Route.Talabat.APIs.Helper;
 using Route.Talabat.APIs.Middlewares;
+using Route.Talabat.Application.Auth;
 using Route.Talabat.Core.Entities.Identity;
 using Route.Talabat.Core.Entities.Product;
 using Route.Talabat.Core.IRepositories;
+using Route.Talabat.Core.IServices;
 using Route.Talabat.Infrastructure;
 using Route.Talabat.Infrastructure.Data;
 using Route.Talabat.Infrastructure.Identity;
@@ -61,7 +63,8 @@ namespace Route.Talabat.APIs
                // options.Password.RequireUppercase=true;
 
             }).AddEntityFrameworkStores<ApplicationIdentityDbContext>();
-            
+
+            builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
 
             #endregion
 
