@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Route.Talabat.APIs.DTOs;
@@ -28,14 +30,22 @@ namespace Route.Talabat.APIs.Controllers
             _mapper = mapper;
         }
 
+        //[AllowAnonymous]//default any one can use it
+        //[Authorize] //must be loginning
+        //[Authorize(AuthenticationSchemes ="Application.Identity")]
+        //[Authorize(AuthenticationSchemes ="Bearer,Bearer02",Roles ="Admin",Policy ="Amazon")]
+        //[Authorize(AuthenticationSchemes ="Bearer")]// ->add schema at program.cs
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]//add default at configration at program.cs
+        
+        [Authorize]
         [HttpGet]
         //Or [HttpPost] without [FromQuery]
-        public async Task<ActionResult<IReadOnlyList<Pagination<ProductToReturnDto>>>> GetProducts([FromQuery]ProductSpecParams specParams)
+        public async Task<ActionResult<IReadOnlyList<Pagination<ProductToReturnDto>>>> GetProducts([FromQuery] ProductSpecParams specParams)
         {
             //  var products = await _productsRepo.GetAllAsync();
 
-           // var spec = new BaseSpecification<Product>();
-           
+            // var spec = new BaseSpecification<Product>();
+
             //Specification for Data
             var spec = new ProductWithBrandAndCategorySpecifications(specParams);
             var products = await _productsRepo.GetAllWithSpecAsync(spec);
@@ -54,13 +64,13 @@ namespace Route.Talabat.APIs.Controllers
 
             var CountSpec = new ProductsWithFilterationForCountSpecifications(specParams);
             var count = await _productsRepo.GetCountAsync(CountSpec/*spec*/);
-          
-            return Ok(new Pagination<ProductToReturnDto>(specParams.PageIndex,specParams.PageSize, count, data));//200
+
+            return Ok(new Pagination<ProductToReturnDto>(specParams.PageIndex, specParams.PageSize, count, data));//200
 
         }
-       // [ProducesResponseType(typeof(ProductToReturnDto),200)]
-        [ProducesResponseType(typeof(ProductToReturnDto),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status404NotFound)]
+        // [ProducesResponseType(typeof(ProductToReturnDto),200)]
+        [ProducesResponseType(typeof(ProductToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int? id)
         {
@@ -73,11 +83,11 @@ namespace Route.Talabat.APIs.Controllers
 
             if (product is null)
                 return NotFound(new ApiResponse(404));
-                // return NotFound(new {Message="Not Found" ,StatusCode= 404});//404
-               // return NotFound();//404
+            // return NotFound(new {Message="Not Found" ,StatusCode= 404});//404
+            // return NotFound();//404
 
-           // return Ok(product);//200
-            return Ok(_mapper.Map<Product,ProductToReturnDto>(product));//200
+            // return Ok(product);//200
+            return Ok(_mapper.Map<Product, ProductToReturnDto>(product));//200
         }
 
         [HttpGet("brands")]

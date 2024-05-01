@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Route.Talabat.APIs.Errors;
 using Route.Talabat.APIs.Helper;
 using Route.Talabat.Core.IRepositories;
 using Route.Talabat.Infrastructure;
+using System.Text;
 
 namespace Route.Talabat.APIs.Extensions
 {
@@ -43,6 +46,57 @@ namespace Route.Talabat.APIs.Extensions
                     return new BadRequestObjectResult(response);
                 };
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddAuthServices(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            //builder.Services.AddAuthentication();
+            //Called By Default when add above [builder.Services.AddIdentity]
+            //default Schema "Application.Identity"
+
+
+
+            //if we dont add "Bearer" this configration will be to default
+            //"Bearer"
+
+            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //   .AddJwtBearer(options =>
+            //   {
+            //       options.TokenValidationParameters = new TokenValidationParameters()
+            //       {
+            //           ValidateIssuer = true,
+            //           ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            //           ValidateAudience = true,
+            //           ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            //           ValidateIssuerSigningKey = true,
+            //           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:AuthKey"] ?? string.Empty)),
+            //           ValidateLifetime=true,
+            //           ClockSkew=TimeSpan.Zero, //changes at times in different Server
+            //       };
+            //   });
+
+             services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+              .AddJwtBearer(options =>
+              {
+                  options.TokenValidationParameters = new TokenValidationParameters()
+                  {
+                      ValidateIssuer = true,
+                      ValidIssuer = configuration["JWT:ValidIssuer"],
+                      ValidateAudience = true,
+                      ValidAudience = configuration["JWT:ValidAudience"],
+                      ValidateIssuerSigningKey = true,
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:AuthKey"] ?? string.Empty)),
+                      ValidateLifetime = true,
+                      ClockSkew = TimeSpan.Zero, //changes at times in different Server
+                  };
+              });
 
             return services;
         }

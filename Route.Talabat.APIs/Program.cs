@@ -1,7 +1,9 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Route.Talabat.APIs.Errors;
 using Route.Talabat.APIs.Extensions;
 using Route.Talabat.APIs.Helper;
@@ -16,6 +18,7 @@ using Route.Talabat.Infrastructure.Data;
 using Route.Talabat.Infrastructure.Identity;
 using StackExchange.Redis;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 
 namespace Route.Talabat.APIs
@@ -26,20 +29,22 @@ namespace Route.Talabat.APIs
         public async static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-          
+
             //Register Services to DI Container
             #region Configure Services
             // Add services to the container.
 
             builder.Services.AddControllers();
-            
+
             builder.Services.AddSwaggerServices();
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>{
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-           
-            builder.Services.AddDbContext<ApplicationIdentityDbContext>(options=>{
+
+            builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+            {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
             });
 
@@ -53,16 +58,19 @@ namespace Route.Talabat.APIs
 
             //ApplicationServicesExtension.ApplicationServices(builder.Services);
             builder.Services.ApplicationServices();
-            
-            
+
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-               // options.Password.RequiredUniqueChars = 2;
-               // options.Password.RequireDigit=true;
-               // options.Password.RequireLowercase=true;
-               // options.Password.RequireUppercase=true;
+                // options.Password.RequiredUniqueChars = 2;
+                // options.Password.RequireDigit=true;
+                // options.Password.RequireLowercase=true;
+                // options.Password.RequireUppercase=true;
 
             }).AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
+            //extension method
+            builder.Services.AddAuthServices(builder.Configuration);
 
             builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
 
@@ -85,7 +93,7 @@ namespace Route.Talabat.APIs
             {
                 await _dbContext.Database.MigrateAsync(); //update-database
                 await ApplicationDbContextSeed.SeedAsync(_dbContext);//Data Seeding
-               
+
                 await _identityDbContext.Database.MigrateAsync(); //update-database
 
                 var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
@@ -95,7 +103,7 @@ namespace Route.Talabat.APIs
             {
                 //  Console.WriteLine(ex.Message);
                 logger.LogError(ex.Message, "An error has been Occured during applaymigrations");
-               // logger.LogError(ex.StackTrace.ToString());//more details
+                // logger.LogError(ex.StackTrace.ToString());//more details
             }
 
 
@@ -103,9 +111,9 @@ namespace Route.Talabat.APIs
             //define middleware for the app
             #region Configure Kestrel Middlewares
             // Configure the HTTP request pipeline.
-          
+
             app.UseMiddleware<ExceptionMiddleware>();
-            
+
             //3 speedly middleware
             //app.Use(async (httpContext, _next) =>
             //{
@@ -146,8 +154,8 @@ namespace Route.Talabat.APIs
             {
                 app.UseSwaggerMiddlewares();
 
-               //500
-               //app.UseDeveloperExceptionPage();//call internaly from .net
+                //500
+                //app.UseDeveloperExceptionPage();//call internaly from .net
             }
 
 
@@ -157,12 +165,13 @@ namespace Route.Talabat.APIs
 
             //use this better than above -> one request 404 not found 
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
-            
+
 
             app.UseHttpsRedirection(); //if request came as http will redirect to https
 
             app.UseStaticFiles();
 
+            //app.UseAuthentication();
             //app.UseAuthorization(); //not need now!
 
 
