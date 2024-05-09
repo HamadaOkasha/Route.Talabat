@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Route.Talabat.APIs.DTOs;
 using Route.Talabat.APIs.Errors;
+using Route.Talabat.APIs.Extensions;
 using Route.Talabat.Core.Entities.Identity;
 using Route.Talabat.Core.IServices;
 using System.Security.Claims;
@@ -71,13 +73,14 @@ namespace Route.Talabat.APIs.Controllers
                 Token = await _authService.CreateTokenAsync(user, _userManager),
             });
         }
+
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
-            var user =await _userManager.FindByEmailAsync(email);
-            
+            var user = await _userManager.FindByEmailAsync(email);
+
             return Ok(new UserDto()
             {
                 DisplayName = user?.DisplayName ?? string.Empty,
@@ -85,6 +88,21 @@ namespace Route.Talabat.APIs.Controllers
                 Token = await _authService.CreateTokenAsync(user, _userManager)
             });
 
+        }
+
+        [Authorize]
+        [HttpGet("address")]
+        public async Task<ActionResult<Address>> GetUserAddress()
+        {
+            //  var email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+
+            // //var user = await _userManager.Users.Include(x=>x.Adress).FirstOrDefaultAsync(x=>x.Email==email);
+            // ////Not here
+
+
+            var user = await _userManager.FindUserWithAddressAsync(User);
+            return Ok(user.Adress);
+      
         }
     }
 }
